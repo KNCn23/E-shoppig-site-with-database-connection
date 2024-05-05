@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kayıt Ol</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+        .container {
+            width: 300px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: calc(100% - 22px); /* Kenar boşluklarını hesaba kat */
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box; /* Padding ve border'ı genişliğe dahil et */
+        }
+        input:focus {
+            outline: none;
+            border-color: #5cb85c; /* Yeşil tonu */
+        }
+        button {
+            width: 100%;
+            background-color: #5cb85c; /* Yeşil tonu */
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c; /* Daha koyu yeşil tonu */
+        }
+        .success-message {
+            color: #5cb85c;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 style="text-align: center; color: #5cb85c;">Kayıt Ol</h2>
+    <form id="registerForm">
+        <input type="text" id="name" placeholder="Adınız" required>
+        <input type="text" id="surname" placeholder="Soyadınız" required>
+        <input type="email" id="email" placeholder="E-posta Adresiniz" required>
+        <input type="date" id="birthdate" placeholder="Doğum Tarihiniz" required>
+        <input type="password" id="password" placeholder="Şifreniz" required>
+        <button type="submit">Kayıt Ol</button>
+    </form>
+    <div id="successMessage" class="success-message"></div>
+</div>
+<script>
+    document.getElementById("registerForm").onsubmit = function(event) {
+        event.preventDefault();
+
+        var name = document.getElementById("name").value;
+        var surname = document.getElementById("surname").value;
+        var email = document.getElementById("email").value;
+        var birthdate = document.getElementById("birthdate").value;
+        var password = document.getElementById("password").value;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/user/register", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                document.getElementById("successMessage").textContent = "Başarıyla kayıt oldunuz!";
+                setTimeout(function() {
+                    window.location.href = "/login"; // Login sayfasına yönlendir
+                }, 2000); // 2 saniye sonra yönlendir
+            } else if (xhr.status !== 200) {
+                document.getElementById("successMessage").textContent = "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyiniz.";
+            }
+        };
+        var data = "name=" + encodeURIComponent(name) + "&surname=" + encodeURIComponent(surname) +
+                   "&email=" + encodeURIComponent(email) + "&birthdate=" + encodeURIComponent(birthdate) +
+                   "&password=" + encodeURIComponent(password);
+        xhr.send(data);
+    };
+</script>
+</body>
+</html>
