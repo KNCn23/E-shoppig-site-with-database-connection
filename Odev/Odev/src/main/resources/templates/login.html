@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 350px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: #d9534f;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .success-message {
+            color: #5cb85c;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #007BFF;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .form-link:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Giriş Yap</h2>
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="email">E-posta Adresiniz</label>
+            <input type="email" id="email" placeholder="E-posta Adresiniz" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Şifreniz</label>
+            <input type="password" id="password" placeholder="Şifreniz" required>
+        </div>
+        <button type="submit">Giriş Yap</button>
+        <div id="errorMessage" class="error-message" style="display: none;">Giriş bilgileri hatalı.</div>
+        <div id="successMessage" class="success-message" style="display: none;">Giriş başarılı! Yönlendiriliyorsunuz...</div>
+    </form>
+    <a href="/register" class="form-link">Hesabınız yok mu? Kayıt olun</a>
+</div>
+<script>
+    document.getElementById("loginForm").addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        var errorMessage = document.getElementById("errorMessage");
+        var successMessage = document.getElementById("successMessage");
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/user/login", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    localStorage.setItem('userId', response.userId);
+                    successMessage.style.display = 'block';
+                    errorMessage.style.display = 'none';
+                    setTimeout(function() {
+                        window.location.href = "/shop";
+                    }, 2000);
+                } else {
+                    errorMessage.style.display = 'block';
+                    successMessage.style.display = 'none';
+                }
+            }
+        };
+        xhr.send("email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password));
+    });
+</script>
+</body>
+</html>
