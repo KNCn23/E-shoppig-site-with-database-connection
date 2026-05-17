@@ -1,0 +1,15 @@
+# Maven
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# macOS
+.DS_Store
+
+# Spring Boot
+*.jar
+application-local.properties
